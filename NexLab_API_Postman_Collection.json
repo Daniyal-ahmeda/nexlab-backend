@@ -1,0 +1,758 @@
+{
+	"info": {
+		"_postman_id": "nexlab-api-collection-v2",
+		"name": "NexLab REST API",
+		"description": "Official Postman Collection for NexLab — Premier Medical Diagnostic & Laboratory Platform (Tripoli, Libya).\nBase URL: http://nexlab-backend.test/api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://nexlab-backend.test/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login (Monder)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Saved token to collection variable');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"monder@example.com\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Authenticate seeded user Monder and retrieve Sanctum Bearer token."
+					}
+				},
+				{
+					"name": "Register New User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ahmed Tripoli\",\n  \"email\": \"ahmed@example.com\",\n  \"password\": \"password123\",\n  \"age\": 29,\n  \"gender\": \"Male\",\n  \"blood_group\": \"A+\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Register a new patient user account with medical profile information."
+					}
+				},
+				{
+					"name": "Get Profile (Me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "Fetch current authenticated user profile."
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Revoke active Sanctum token."
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Catalog",
+			"item": [
+				{
+					"name": "List All Tests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tests",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tests"
+							]
+						},
+						"description": "Retrieve full list of diagnostic tests and packages."
+					}
+				},
+				{
+					"name": "Filter Tests by Category (Heart)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tests?category=Heart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tests"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Heart"
+								}
+							]
+						},
+						"description": "Filter tests by category: Heart, Blood, Thyroid, Energy, General."
+					}
+				},
+				{
+					"name": "Filter Packages Only",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tests?is_package=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tests"
+							],
+							"query": [
+								{
+									"key": "is_package",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Retrieve only health packages."
+					}
+				},
+				{
+					"name": "Search Tests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tests?search=blood",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tests"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "blood"
+								}
+							]
+						},
+						"description": "Search diagnostic tests by name, subtitle, or description."
+					}
+				},
+				{
+					"name": "List Partner Labs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/labs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"labs"
+							]
+						},
+						"description": "Retrieve list of accredited Libyan partner labs in Tripoli."
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Bookings",
+			"item": [
+				{
+					"name": "List My Bookings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "Fetch user's lab test bookings with test and lab details."
+					}
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"diagnostic_test_id\": \"t1\",\n  \"partner_lab_id\": \"l1\",\n  \"is_home_collection\": true,\n  \"date\": \"2026-08-10\",\n  \"time_slot\": \"09:00 AM\",\n  \"patient_name\": \"Monder\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "Create a new lab appointment booking."
+					}
+				},
+				{
+					"name": "Cancel Booking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bookings/NX-90421/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings",
+								"NX-90421",
+								"cancel"
+							]
+						},
+						"description": "Cancel an existing booking by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Medical Records & Prescriptions",
+			"item": [
+				{
+					"name": "List Test Results",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/results",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"results"
+							]
+						},
+						"description": "Fetch user's test results with detailed biomarker analysis."
+					}
+				},
+				{
+					"name": "Upload Prescription",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "prescription",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/prescriptions/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"prescriptions",
+								"upload"
+							]
+						},
+						"description": "Upload doctor prescription (PDF, PNG, JPG)."
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Family Members",
+			"item": [
+				{
+					"name": "List Family Members",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/family-members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"family-members"
+							]
+						},
+						"description": "Get user's registered family member profiles."
+					}
+				},
+				{
+					"name": "Add Family Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sara\",\n  \"relationship\": \"Spouse\",\n  \"age\": 30,\n  \"gender\": \"Female\",\n  \"blood_group\": \"A+\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/family-members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"family-members"
+							]
+						},
+						"description": "Add a new family member."
+					}
+				},
+				{
+					"name": "Delete Family Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/family-members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"family-members",
+								"1"
+							]
+						},
+						"description": "Delete a family member by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Libyan Payment Gateways",
+			"item": [
+				{
+					"name": "List Payment Methods",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/payment-methods",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment-methods"
+							]
+						},
+						"description": "Retrieve user's saved Libyan payment gateways (Edfaaly, Mobi Cash, Sadad, etc.)."
+					}
+				},
+				{
+					"name": "Add Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"Moamalat\",\n  \"number\": \"091-9988776\",\n  \"expiry\": null,\n  \"is_default\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/payment-methods",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment-methods"
+							]
+						},
+						"description": "Add a new Libyan payment method."
+					}
+				},
+				{
+					"name": "Set Default Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/payment-methods/1/default",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment-methods",
+								"1",
+								"default"
+							]
+						},
+						"description": "Set specified payment method as default."
+					}
+				},
+				{
+					"name": "Delete Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/payment-methods/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment-methods",
+								"1"
+							]
+						},
+						"description": "Delete payment method by ID."
+					}
+				}
+			]
+		}
+	]
+}
