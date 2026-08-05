@@ -16,7 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Seed User
+        // 1. Seed Admin User
+        User::updateOrCreate(
+            ['email' => 'admin@nexlab.ly'],
+            [
+                'name' => 'NexLab System Administrator',
+                'password' => Hash::make('password'),
+                'age' => 35,
+                'gender' => 'Male',
+                'blood_group' => 'O+',
+                'is_admin' => true,
+            ]
+        );
+
+        // 2. Seed Standard Patient User
         $user = User::updateOrCreate(
             ['email' => 'monder@example.com'],
             [
@@ -25,10 +38,11 @@ class DatabaseSeeder extends Seeder
                 'age' => 34,
                 'gender' => 'Male',
                 'blood_group' => 'O+',
+                'is_admin' => false,
             ]
         );
 
-        // 2. Seed Diagnostic Tests
+        // 3. Seed Diagnostic Tests
         $tests = [
             [
                 'id' => 't9',
@@ -96,7 +110,7 @@ class DatabaseSeeder extends Seeder
             DiagnosticTest::updateOrCreate(['id' => $testData['id']], $testData);
         }
 
-        // 3. Seed Partner Labs
+        // 4. Seed Partner Labs
         $labs = [
             [
                 'id' => 'l1',
@@ -124,7 +138,7 @@ class DatabaseSeeder extends Seeder
             PartnerLab::updateOrCreate(['id' => $labData['id']], $labData);
         }
 
-        // 4. Seed Libyan Payment Methods
+        // 5. Seed Libyan Payment Methods
         $paymentMethods = [
             [
                 'type' => 'Edfaaly',

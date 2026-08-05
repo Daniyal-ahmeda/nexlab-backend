@@ -26,6 +26,7 @@ class User extends Authenticatable
         'age',
         'gender',
         'blood_group',
+        'is_admin',
     ];
 
     /**
@@ -49,7 +50,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'age' => 'integer',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    /**
+     * Check if user is an administrator.
+     */
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
     }
 
     /**

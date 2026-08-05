@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'age' => $this->age,
             'gender' => $this->gender,
             'blood_group' => $this->blood_group,
+            'is_admin' => (bool) $this->is_admin,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
