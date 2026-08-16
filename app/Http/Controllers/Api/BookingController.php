@@ -10,10 +10,13 @@ use App\Models\DiagnosticTest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Patient Bookings
+ */
 class BookingController extends Controller
 {
     /**
-     * Display authenticated user's bookings.
+     * Display authenticated patient's bookings.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -27,7 +30,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Create a new booking for authenticated user.
+     * Create a new lab appointment booking.
      */
     public function store(StoreBookingRequest $request): BookingResource
     {

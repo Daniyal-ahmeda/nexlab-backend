@@ -8,6 +8,9 @@ use App\Models\DiagnosticTest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Public Catalog
+ */
 class TestController extends Controller
 {
     /**

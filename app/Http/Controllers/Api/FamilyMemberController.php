@@ -9,10 +9,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Patient Family Members
+ */
 class FamilyMemberController extends Controller
 {
     /**
-     * Display listing of authenticated user's family members.
+     * Display listing of authenticated patient's family members.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -20,7 +23,7 @@ class FamilyMemberController extends Controller
     }
 
     /**
-     * Store a new family member for authenticated user.
+     * Store a new family member for authenticated patient.
      */
     public function store(StoreFamilyMemberRequest $request): JsonResponse
     {

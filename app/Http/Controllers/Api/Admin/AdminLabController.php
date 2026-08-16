@@ -8,6 +8,9 @@ use App\Models\PartnerLab;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @tags Admin Portal
+ */
 class AdminLabController extends Controller
 {
     /**

@@ -12,10 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @tags Patient Authentication
+ */
 class AuthController extends Controller
 {
     /**
-     * Authenticate user and return token.
+     * Authenticate patient user and return token.
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -38,7 +41,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a new user and return token.
+     * Register a new patient account.
      */
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -74,7 +77,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()?->delete();
 
         return response()->json([
             'message' => 'Successfully logged out',

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\DiagnosticTest;
 use App\Models\PartnerLab;
 use App\Models\PaymentMethod;
+use App\Models\TestResult;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -165,6 +166,54 @@ class DatabaseSeeder extends Seeder
                 ['user_id' => $user->id, 'type' => $method['type']],
                 $method
             );
+        }
+
+        // 6. Seed Sample Medical Test Result & Biomarkers for Patient Monder
+        $testResult = TestResult::updateOrCreate(
+            ['id' => 'res_1'],
+            [
+                'user_id' => $user->id,
+                'diagnostic_test_id' => 't1',
+                'lab_name' => 'Tripoli Central Diagnostic Lab',
+                'test_date' => '2026-08-01',
+                'report_date' => '2026-08-02',
+                'pdf_url' => asset('storage/test_results/sample_report.pdf'),
+            ]
+        );
+
+        $biomarkers = [
+            [
+                'name' => 'Hemoglobin',
+                'value' => '14.2',
+                'unit' => 'g/dL',
+                'reference_range' => '13.5 - 17.5',
+                'status' => 'Normal',
+            ],
+            [
+                'name' => 'Red Blood Cells (RBC)',
+                'value' => '4.8',
+                'unit' => 'm/uL',
+                'reference_range' => '4.3 - 5.9',
+                'status' => 'Normal',
+            ],
+            [
+                'name' => 'White Blood Cells (WBC)',
+                'value' => '11.5',
+                'unit' => 'x10^3/uL',
+                'reference_range' => '4.5 - 11.0',
+                'status' => 'High',
+            ],
+            [
+                'name' => 'Platelet Count',
+                'value' => '250',
+                'unit' => 'x10^3/uL',
+                'reference_range' => '150 - 450',
+                'status' => 'Normal',
+            ],
+        ];
+
+        foreach ($biomarkers as $bm) {
+            $testResult->biomarkers()->updateOrCreate(['name' => $bm['name']], $bm);
         }
     }
 }

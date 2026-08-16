@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Booking;
 use App\Models\DiagnosticTest;
 use App\Models\PartnerLab;
 use App\Models\User;
@@ -148,4 +149,60 @@ test('can upload prescription', function () {
 
     $response->assertStatus(200)
         ->assertJsonStructure(['message', 'path']);
+});
+
+test('authenticated user can view their bookings', function () {
+    $user = User::where('email', 'monder@example.com')->first();
+    $test = DiagnosticTest::first();
+    $lab = PartnerLab::first();
+
+    Booking::create([
+        'id' => 'NX-55443',
+        'user_id' => $user->id,
+        'diagnostic_test_id' => $test->id,
+        'partner_lab_id' => $lab->id,
+        'is_home_collection' => true,
+        'date' => '2026-08-20',
+        'time_slot' => '10:00 AM',
+        'patient_name' => 'Monder',
+        'total_amount' => 150.00,
+        'status' => 'pending',
+    ]);
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->getJson('/api/bookings');
+
+    $response->assertStatus(200)
+        ->assertJsonStructure(['data' => [['id', 'status', 'patient_name', 'diagnostic_test', 'partner_lab']]]);
+});
+
+test('authenticated user can add and delete payment method', function () {
+    $user = User::where('email', 'monder@example.com')->first();
+
+    $createResponse = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/payment-methods', [
+            'type' => 'Sadad',
+            'number' => '091-9999999',
+            'is_default' => false,
+        ]);
+
+    $createResponse->assertStatus(201)
+        ->assertJson(['data' => ['type' => 'Sadad', 'number' => '091-9999999']]);
+
+    $pmId = $createResponse->json('data.id');
+
+    $deleteResponse = $this->actingAs($user, 'sanctum')
+        ->deleteJson("/api/payment-methods/{$pmId}");
+
+    $deleteResponse->assertStatus(200);
+});
+
+test('authenticated user can log out', function () {
+    $user = User::where('email', 'monder@example.com')->first();
+
+    $response = $this->actingAs($user, 'sanctum')
+        ->postJson('/api/logout');
+
+    $response->assertStatus(200)
+        ->assertJson(['message' => 'Successfully logged out']);
 });

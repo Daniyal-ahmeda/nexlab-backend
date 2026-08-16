@@ -10,6 +10,9 @@ use App\Models\PartnerLab;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @tags Admin Portal
+ */
 class AdminDashboardController extends Controller
 {
     /**

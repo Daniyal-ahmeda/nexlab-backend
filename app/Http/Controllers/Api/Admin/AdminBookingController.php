@@ -8,6 +8,9 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Admin Portal
+ */
 class AdminBookingController extends Controller
 {
     /**

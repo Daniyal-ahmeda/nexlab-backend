@@ -8,10 +8,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Patient Medical Records
+ */
 class ResultController extends Controller
 {
     /**
-     * Display authenticated user's test results with biomarkers.
+     * Display authenticated patient's test results with biomarkers.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -25,7 +28,7 @@ class ResultController extends Controller
     }
 
     /**
-     * Handle prescription file upload.
+     * Handle patient prescription file upload.
      */
     public function uploadPrescription(Request $request): JsonResponse
     {

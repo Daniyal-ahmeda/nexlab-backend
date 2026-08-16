@@ -8,6 +8,9 @@ use App\Models\DiagnosticTest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @tags Admin Portal
+ */
 class AdminTestController extends Controller
 {
     /**

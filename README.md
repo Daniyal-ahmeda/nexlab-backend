@@ -6,6 +6,15 @@ All prices are strictly in **Libyan Dinars (LYD)**.
 
 ---
 
+## 📚 Scramble Interactive API Documentation
+
+NexLab includes automatic, interactive OpenAPI / Swagger documentation powered by **Dedoc Scramble**:
+
+🔗 **Interactive API Docs URL**: `http://nexlab-backend.test/docs/api`  
+📄 **OpenAPI Specification JSON**: `http://nexlab-backend.test/docs/api.json`
+
+---
+
 ## 💻 Admin Web Dashboard
 
 NexLab comes with an interactive, modern **Admin Dashboard Single-Page Web App**:
@@ -17,11 +26,30 @@ NexLab comes with an interactive, modern **Admin Dashboard Single-Page Web App**
 - **Email**: `admin@nexlab.ly`
 - **Password**: `password`
 
-### Dashboard Capabilities:
-- 📊 **Overview Analytics**: Real-time revenue in LYD, booking status count breakdown, total registered patients, and active partner labs.
-- 📋 **Bookings Management**: Filter bookings by status (`Pending`, `Completed`, `Cancelled`) and perform 1-click status updates.
-- 🧪 **Diagnostic Tests**: Add new diagnostic tests & packages, update pricing, set fasting/sample rules, or delete tests.
-- 🏥 **Partner Labs**: Add accredited Tripoli laboratories, manage phone/address/hours, and toggle home sample collection.
+---
+
+## 🔑 Seeded Demo Credentials & Catalog IDs
+
+### User Credentials
+| Role | Email | Password | Details |
+| :--- | :--- | :--- | :--- |
+| **Administrator** | `admin@nexlab.ly` | `password` | NexLab System Administrator |
+| **Patient User** | `monder@example.com` | `password` | Monder (User ID: 1, Age: 34, Blood: O+) |
+
+### Seeded Diagnostic Test IDs
+| Test ID | Test Name | Category | Price (LYD) | Fasting | Package |
+| :---: | :--- | :---: | :---: | :---: | :---: |
+| **`t1`** | CBC Complete Blood Count | Blood | 45.00 LYD | No | No |
+| **`t2`** | Lipid Profile Panel | Heart | 85.00 LYD | Yes | No |
+| **`t3`** | Thyroid Panel T3/T4/TSH | Thyroid | 110.00 LYD | No | No |
+| **`t4`** | Vitamin D & B12 Panel | Energy | 140.00 LYD | No | Yes |
+| **`t9`** | Full Body Executive Checkup | General | 299.00 LYD | Yes | Yes |
+
+### Seeded Partner Lab IDs
+| Lab ID | Partner Lab Name | Address (Tripoli) | Phone | Home Collection |
+| :---: | :--- | :--- | :--- | :---: |
+| **`l1`** | Tripoli Central Diagnostic Lab | Omar Al-Mukhtar Street, Tripoli | +218 21 123 4567 | Yes |
+| **`l2`** | Al-Afia Medical Center | Gurji Road, Tripoli | +218 21 987 6543 | Yes |
 
 ---
 
@@ -48,15 +76,6 @@ php artisan storage:link
 ```
 http://nexlab-backend.test/api
 ```
-
----
-
-## 🔑 Seeded Credentials Summary
-
-| Role | Email | Password | Name |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@nexlab.ly` | `password` | NexLab System Administrator |
-| **Patient User** | `monder@example.com` | `password` | Monder (Age: 34, Blood: O+) |
 
 ---
 

@@ -9,10 +9,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * @tags Patient Payment Gateways
+ */
 class PaymentMethodController extends Controller
 {
     /**
-     * Display listing of user's payment methods.
+     * Display listing of patient's payment methods.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -20,7 +23,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Store a new payment method for user.
+     * Store a new payment method for patient.
      */
     public function store(StorePaymentMethodRequest $request): JsonResponse
     {
