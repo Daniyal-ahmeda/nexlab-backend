@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\AdminResultController;
 use App\Http\Controllers\Api\Admin\AdminTestController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\FamilyMemberController;
 use App\Http\Controllers\Api\LabController;
 use App\Http\Controllers\Api\PaymentMethodController;
@@ -27,7 +28,9 @@ Route::get('/labs', [LabController::class, 'index']);
 // Authenticated Patient Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
+    Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/device-token', [DeviceController::class, 'update']);
 
     // Bookings
     Route::get('/bookings', [BookingController::class, 'index']);
@@ -54,10 +57,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
     Route::post('/logout', [AdminAuthController::class, 'logout']);
     Route::get('/dashboard/stats', [AdminDashboardController::class, 'stats']);
+    Route::get('/patients', [AdminDashboardController::class, 'patients']);
 
     // Booking Management
     Route::get('/bookings', [AdminBookingController::class, 'index']);
     Route::patch('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus']);
+    Route::delete('/bookings/clear-all', [AdminBookingController::class, 'destroyAll']);
+    Route::delete('/bookings/{id}', [AdminBookingController::class, 'destroy']);
 
     // Diagnostic Test Management
     Route::post('/tests', [AdminTestController::class, 'store']);

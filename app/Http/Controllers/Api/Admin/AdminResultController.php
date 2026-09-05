@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TestResultResource;
 use App\Models\TestResult;
+use App\Services\FcmService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -56,7 +57,17 @@ class AdminResultController extends Controller
             $result->biomarkers()->create($bm);
         }
 
-        return (new TestResultResource($result->load(['biomarkers', 'diagnosticTest'])))
+        $result->load(['biomarkers', 'diagnosticTest', 'user']);
+
+        // Notify the patient via FCM push notification
+        app(FcmService::class)->sendToUser(
+            $result->user,
+            'Your Test Results Are Ready 🧪',
+            "Your {$result->diagnosticTest->name} results have been published. Tap to view.",
+            ['result_id' => $result->id, 'type' => 'new_result'],
+        );
+
+        return (new TestResultResource($result))
             ->response()
             ->setStatusCode(201);
     }

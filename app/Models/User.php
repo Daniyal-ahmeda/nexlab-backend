@@ -22,11 +22,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'firebase_uid',
         'password',
         'age',
         'gender',
         'blood_group',
         'is_admin',
+        'fcm_token',
     ];
 
     /**

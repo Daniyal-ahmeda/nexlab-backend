@@ -22,6 +22,7 @@ class StorePaymentMethodRequest extends FormRequest
             'number' => ['required', 'string', 'max:255'],
             'expiry' => ['nullable', 'string', 'max:255'],
             'is_default' => ['boolean'],
+            'firebase_token' => ['required', 'string'],
         ];
     }
 }

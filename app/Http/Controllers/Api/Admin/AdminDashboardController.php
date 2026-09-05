@@ -48,4 +48,19 @@ class AdminDashboardController extends Controller
             'recent_bookings' => BookingResource::collection($recentBookings),
         ]);
     }
+
+    /**
+     * Display all registered patient accounts.
+     */
+    public function patients(): JsonResponse
+    {
+        $patients = User::where('is_admin', false)
+            ->select(['id', 'name', 'email', 'age', 'gender', 'blood_group', 'fcm_token', 'created_at'])
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $patients,
+        ]);
+    }
 }

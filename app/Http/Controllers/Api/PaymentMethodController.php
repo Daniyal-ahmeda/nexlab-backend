@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaymentMethodRequest;
 use App\Http\Resources\PaymentMethodResource;
+use App\Services\FirebaseOtpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -14,6 +15,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 class PaymentMethodController extends Controller
 {
+    public function __construct(private readonly FirebaseOtpService $firebaseOtp) {}
+
     /**
      * Display listing of patient's payment methods.
      */
@@ -24,11 +27,17 @@ class PaymentMethodController extends Controller
 
     /**
      * Store a new payment method for patient.
+     *
+     * Requires a valid Firebase Phone Auth ID token (`firebase_token`) to confirm
+     * the patient's phone identity before registering a new payment method.
      */
     public function store(StorePaymentMethodRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $user = $request->user();
+
+        // Verify the Firebase token belongs to this authenticated user.
+        $this->firebaseOtp->verifyTokenForUser($validated['firebase_token'], $user);
 
         $isFirst = $user->paymentMethods()->count() === 0;
         $shouldBeDefault = $isFirst || ($validated['is_default'] ?? false);
@@ -39,6 +48,9 @@ class PaymentMethodController extends Controller
         } else {
             $validated['is_default'] = false;
         }
+
+        // Do not persist the token itself.
+        unset($validated['firebase_token']);
 
         $paymentMethod = $user->paymentMethods()->create($validated);
 

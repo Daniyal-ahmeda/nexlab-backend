@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\FirebaseOtpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +18,8 @@ use Illuminate\Validation\ValidationException;
  */
 class AuthController extends Controller
 {
+    public function __construct(private readonly FirebaseOtpService $firebaseOtp) {}
+
     /**
      * Authenticate patient user and return token.
      */
@@ -42,10 +45,16 @@ class AuthController extends Controller
 
     /**
      * Register a new patient account.
+     *
+     * Requires a valid Firebase Phone Auth ID token (`firebase_token`) obtained
+     * by the client after completing phone number OTP verification via Firebase Auth SDK.
      */
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
+
+        // Verify the Firebase Phone Auth token and extract the confirmed phone number.
+        $confirmedPhone = $this->firebaseOtp->verifyToken($data['firebase_token']);
 
         $user = User::create([
             'name' => $data['name'],
@@ -54,6 +63,7 @@ class AuthController extends Controller
             'age' => $data['age'] ?? null,
             'gender' => $data['gender'] ?? 'Male',
             'blood_group' => $data['blood_group'] ?? 'O+',
+            'phone' => $confirmedPhone,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;

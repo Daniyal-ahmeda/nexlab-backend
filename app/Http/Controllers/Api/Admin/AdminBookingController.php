@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -42,5 +43,37 @@ class AdminBookingController extends Controller
         ]);
 
         return new BookingResource($booking->load(['user', 'diagnosticTest', 'partnerLab']));
+    }
+
+    /**
+     * Delete a single booking (only completed bookings).
+     */
+    public function destroy(string $id): JsonResponse
+    {
+        $booking = Booking::findOrFail($id);
+
+        if ($booking->status !== 'completed') {
+            return response()->json([
+                'message' => 'Only completed bookings can be deleted.',
+            ], 422);
+        }
+
+        $booking->delete();
+
+        return response()->json([
+            'message' => 'Booking deleted successfully',
+        ]);
+    }
+
+    /**
+     * Clear all completed bookings.
+     */
+    public function destroyAll(): JsonResponse
+    {
+        $deletedCount = Booking::where('status', 'completed')->delete();
+
+        return response()->json([
+            'message' => "Successfully cleared {$deletedCount} completed bookings.",
+        ]);
     }
 }

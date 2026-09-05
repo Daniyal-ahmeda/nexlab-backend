@@ -24,6 +24,8 @@ class RegisterRequest extends FormRequest
             'age' => ['nullable', 'integer', 'min:0', 'max:120'],
             'gender' => ['nullable', 'in:Male,Female,Other'],
             'blood_group' => ['nullable', 'in:A+,A-,B+,B-,O+,O-,AB+,AB-'],
+            'firebase_token' => ['required', 'string'],
+            'phone' => ['nullable', 'string', 'max:20'],
         ];
     }
 }

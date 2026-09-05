@@ -4,6 +4,7 @@ use App\Models\Booking;
 use App\Models\DiagnosticTest;
 use App\Models\PartnerLab;
 use App\Models\User;
+use App\Services\FirebaseOtpService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,6 +13,11 @@ beforeEach(function () {
 });
 
 test('can register a new user', function () {
+    // Mock Firebase OTP so no real HTTP call is made.
+    $mock = Mockery::mock(FirebaseOtpService::class);
+    $mock->shouldReceive('verifyToken')->once()->andReturn('+218900000001');
+    app()->instance(FirebaseOtpService::class, $mock);
+
     $response = $this->postJson('/api/register', [
         'name' => 'Ahmed Tripoli',
         'email' => 'ahmed@example.com',
@@ -19,6 +25,7 @@ test('can register a new user', function () {
         'age' => 29,
         'gender' => 'Male',
         'blood_group' => 'A+',
+        'firebase_token' => 'mock-firebase-token',
     ]);
 
     $response->assertStatus(201)
@@ -179,11 +186,17 @@ test('authenticated user can view their bookings', function () {
 test('authenticated user can add and delete payment method', function () {
     $user = User::where('email', 'monder@example.com')->first();
 
+    // Mock Firebase OTP verification for the payment method store.
+    $mock = Mockery::mock(FirebaseOtpService::class);
+    $mock->shouldReceive('verifyTokenForUser')->once()->andReturn('+218900000001');
+    app()->instance(FirebaseOtpService::class, $mock);
+
     $createResponse = $this->actingAs($user, 'sanctum')
         ->postJson('/api/payment-methods', [
             'type' => 'Sadad',
             'number' => '091-9999999',
             'is_default' => false,
+            'firebase_token' => 'mock-firebase-token',
         ]);
 
     $createResponse->assertStatus(201)
